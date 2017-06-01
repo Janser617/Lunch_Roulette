@@ -1,0 +1,51 @@
+body {
+    font-family: Lato;
+}
+
+.thumbnail img {
+    width:100%;
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+}
+
+#delete-form {
+    display: inline;
+}
+
+#taken {
+	font-size: 1.5em;
+	font-weight: normal;
+}
+
+#container {
+	margin: 20px auto;
+	max-width: 600px;
+}
+
+h1 {
+	font-family: Lato;
+	font-weight: 700;
+	font-size: 5em;
+}
+
+h3 {
+	font-family: Lato;
+	font-size: 2em;
+}
+
+hr {
+	width:400px;
+	border-top: 1px solid #f8f8f8;
+	border-bottom: 0px solid rgb(0,0,0);
+	border-bottom: 2px solid rgba(0,0,0,.2);
+}
+
+html {
+	height: 100%;
+}

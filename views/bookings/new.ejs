@@ -1,0 +1,18 @@
+<% include ../partials/header %>
+
+<div class="container"></div>
+    <div class="row">
+        <h1 style="text-align:center">Add a New Booking to <%= lunch.date %></h1>
+        
+        <div style="width:30%; margin: 25px auto">
+        <form action="/lunches/<%= lunch._id%>/bookings" method="POST">
+            <div class="form-group">
+                <input class="btn btn-lg btn-primary btn-block" type ="submit">
+            </div>
+        </form>
+        <a href="/lunches">Go Back</a>
+        </div>
+
+    </div>
+</div>
+<% include ../partials/footer %>

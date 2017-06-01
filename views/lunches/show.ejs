@@ -1,0 +1,50 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">Lunch Roulette</p>
+            <div class="list-group">
+                <li class="list-group-item active">Info 1</li>
+                <li class="list-group-item">Info 2</li>
+                <li class="list-group-item">Info 3</li>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <div class="caption-full">
+                    <h4><a><%= lunch.date %></a></h4>
+                    <p><%= lunch.time %></p>
+                    <p><em>Submitted by: <%= lunch.author.username %></em></p>
+                    <% if(currentUser && lunch.author.id.equals(currentUser._id)){ %>
+                        <a class ="btn btn-warning" href="/lunches/<%= lunch._id %>/edit">Edit</a>
+                        <form id="delete-form" action="/lunches/<%= lunch._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
+                <% for(var i=0; i<4; i++) {%>
+                    <% if(lunch.bookings[i]) { %>
+                        <div class="well">
+                            <div class="text-left">
+                                <span id="taken" class="label label-danger">Taken</span>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="well">
+                            <div class="text-right">
+                                <a href="/lunches/<%=lunch._id%>/bookings/new" class="btn btn-success">Take a Seat</a>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<% include ../partials/footer %>
+
+
