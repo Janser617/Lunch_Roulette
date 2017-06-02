@@ -14,15 +14,6 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-// setup email data with unicode symbols
-let mailOptions = {
-    from: '"Lunch Roulette" <lunch.roulette777@gmail.com>', // sender address
-    to: 'janscheerer.mail@gmail.com', // list of receivers
-    subject: 'Hello', // Subject line
-    text: 'Hello world ? TROLOLOL', // plain text body
-    html: '<b>Hello world ?</b>' // html body
-};
-
 
 // Bookings New
 router.get("/new", isLoggedIn,  function(req, res){
@@ -56,6 +47,8 @@ router.post("/", isLoggedIn, function(req, res){
                     booking.save();
                     lunch.bookings.push(booking);
                     lunch.save();
+                    // setup email data with unicode symbols
+                    let mailOptions = createMailOptions(req.user.email, lunch);
                     transporter.sendMail(mailOptions, (error, info) => {
                         if (error) {
                             return console.log(error);
@@ -69,6 +62,17 @@ router.post("/", isLoggedIn, function(req, res){
         }
     });
 });
+
+function createMailOptions(address, lunch) {
+    return {
+        from: '"Lunch Roulette" <lunch.roulette777@gmail.com>', // sender address
+        to: address, // list of receivers
+        subject: 'Hello', // Subject line
+        text: 'Your appointment is on ' + lunch.date + ', from ' + lunch.time + '. Enjoy!', // plain text body
+        html: 'Your appointment is on ' + lunch.date + ', from ' + lunch.time + '. Enjoy!' // html body
+    };
+}
+
 
 // Middleware
 function isLoggedIn(req, res, next){
