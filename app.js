@@ -14,7 +14,7 @@ var bookingRoutes    = require("./routes/bookings"),
     lunchRoutes = require("./routes/lunches"),
     indexRoutes      = require("./routes/index");
     
-    
+//console.log(process.env.DATABASEURL);
 mongoose.connect(process.env.DATABASEURL);
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
