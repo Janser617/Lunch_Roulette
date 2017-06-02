@@ -52,13 +52,16 @@ router.post("/", isLoggedIn, function(req, res){
 // Edit Lunch
 router.get("/:id/edit", checkLunchOwnership, function(req, res){
     Lunch.findById(req.params.id, function(err, foundLunch){
+        if(err) {
+            res.redirect("back");
+        }
         res.render("lunches/edit", {lunch: foundLunch});
     });
 });
 
 // Update Lunch Route
 router.put("/:id", checkLunchOwnership, function(req, res){
-    Lunch.findByIdAndUpdate(req.params.id, req.body.Lunch, function(err, updatedLunch){
+    Lunch.findByIdAndUpdate(req.params.id, req.body.lunch, function(err, updatedLunch){
         if(err){
             res.redirect("/lunches");
         } else {
