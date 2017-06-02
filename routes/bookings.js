@@ -32,7 +32,7 @@ router.post("/", isLoggedIn, function(req, res){
                     res.redirect("/lunches");
                 } else {
                     booking.owner.id = req.user._id;
-                    booking.owner.username = req.user.username;
+                    booking.owner.email = req.user.email;
                     booking.save();
                     lunch.bookings.push(booking);
                     lunch.save();
