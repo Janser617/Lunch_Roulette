@@ -2,6 +2,26 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Lunch = require("../models/lunch");
 var Booking = require("../models/booking");
+const nodemailer = require('nodemailer');
+
+
+// create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'lunch.roulette777@gmail.com',
+        pass: 'q8F3hc7FvUAH64ffd8Bj'
+    }
+});
+
+// setup email data with unicode symbols
+let mailOptions = {
+    from: '"Lunch Roulette" <lunch.roulette777@gmail.com>', // sender address
+    to: 'janscheerer.mail@gmail.com', // list of receivers
+    subject: 'Hello', // Subject line
+    text: 'Hello world ? TROLOLOL', // plain text body
+    html: '<b>Hello world ?</b>' // html body
+};
 
 
 // Bookings New
@@ -36,6 +56,12 @@ router.post("/", isLoggedIn, function(req, res){
                     booking.save();
                     lunch.bookings.push(booking);
                     lunch.save();
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
                     req.flash("success", "Booking Successful. You have a new Lunch appointment!");
                     res.redirect("/lunches/" + lunch._id);
                 }
