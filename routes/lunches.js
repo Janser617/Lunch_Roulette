@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Lunch = require("../models/lunch");
+var middleware = require("../middleware")
 
 // INDEX ROUTE: show list of all Lunches
 router.get("/", function(req, res){
@@ -14,7 +15,7 @@ router.get("/", function(req, res){
 });
 
 //NEW: show form to create Lunch
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("lunches/new");
 });
 
@@ -31,7 +32,7 @@ router.get("/:id", function(req, res){
 });
 
 //CREATE: add new Lunch to database
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     var date = req.body.date;
     var time = req.body.time;
     var author = {
@@ -50,7 +51,7 @@ router.post("/", isLoggedIn, function(req, res){
 
 
 // Edit Lunch
-router.get("/:id/edit", checkLunchOwnership, function(req, res){
+router.get("/:id/edit", middleware.checkLunchOwnership, function(req, res){
     Lunch.findById(req.params.id, function(err, foundLunch){
         if(err) {
             res.redirect("back");
@@ -60,7 +61,7 @@ router.get("/:id/edit", checkLunchOwnership, function(req, res){
 });
 
 // Update Lunch Route
-router.put("/:id", checkLunchOwnership, function(req, res){
+router.put("/:id", middleware.checkLunchOwnership, function(req, res){
     Lunch.findByIdAndUpdate(req.params.id, req.body.lunch, function(err, updatedLunch){
         if(err){
             res.redirect("/lunches");
@@ -71,7 +72,7 @@ router.put("/:id", checkLunchOwnership, function(req, res){
 });
 
 // Destroy Lunch route
-router.delete("/:id", checkLunchOwnership, function(req, res){
+router.delete("/:id", middleware.checkLunchOwnership, function(req, res){
     Lunch.findByIdAndRemove(req.params.id, function(err){
         if(err) {
             res.redirect("/lunches");
@@ -82,31 +83,6 @@ router.delete("/:id", checkLunchOwnership, function(req, res){
 });
 
 // Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        res.redirect("/login");
-    }
-}
 
-function checkLunchOwnership(req, res, next){
-    if(req.isAuthenticated()){
-        Lunch.findById(req.params.id, function(err, foundLunch){
-            if(err) {
-                res.redirect("back");
-            } else {
-                if(foundLunch.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-            
-        });
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;

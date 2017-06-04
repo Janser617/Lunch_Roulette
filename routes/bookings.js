@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Lunch = require("../models/lunch");
 var Booking = require("../models/booking");
+var middleware = require("../middleware");
 const nodemailer = require('nodemailer');
 
 
@@ -18,7 +19,7 @@ let transporter = nodemailer.createTransport({
 
 
 // Bookings New
-router.get("/new", isLoggedIn,  function(req, res){
+router.get("/new", middleware.isLoggedIn,  function(req, res){
     Lunch.findById(req.params.id, function(err, lunch){
         if(err){
             req.flash("error", err.message);
@@ -31,7 +32,7 @@ router.get("/new", isLoggedIn,  function(req, res){
 });
 
 // Bookings Create
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     Lunch.findById(req.params.id, function(err, lunch){
         if(err){
             console.log(err);
@@ -75,15 +76,5 @@ function createMailOptions(address, lunch) {
     };
 }
 
-
-// Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        req.flash("error", "Please log in before you register for a lunch!");
-        res.redirect("/login");
-    }
-}
 
 module.exports = router;
