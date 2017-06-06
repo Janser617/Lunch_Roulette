@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Lunch = require("../models/lunch");
-var middleware = require("../middleware")
+var middleware = require("../middleware");
 
 // INDEX ROUTE: show list of all Lunches
 router.get("/", function(req, res){
@@ -15,7 +15,7 @@ router.get("/", function(req, res){
 });
 
 //NEW: show form to create Lunch
-router.get("/new", middleware.isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, middleware.isActive, function(req, res){
     res.render("lunches/new");
 });
 
@@ -32,7 +32,7 @@ router.get("/:id", function(req, res){
 });
 
 //CREATE: add new Lunch to database
-router.post("/", middleware.isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, middleware.isActive, function(req, res){
     var date = req.body.date;
     var time = req.body.time;
     var author = {

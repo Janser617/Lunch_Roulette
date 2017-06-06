@@ -31,6 +31,14 @@ middlewareObj.checkLunchOwnership = function(req, res, next){
     }
 };
 
+middlewareObj.isActive = function(req, res, next){
+    if(req.user.active) {
+        next();
+    } else {
+        req.flash("error", "Please confirm your email address first!");
+        res.redirect("/lunches");
+    }
+};
 
 module.exports = middlewareObj;
 

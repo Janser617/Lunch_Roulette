@@ -19,7 +19,7 @@ let transporter = nodemailer.createTransport({
 
 
 // Bookings New
-router.get("/new", middleware.isLoggedIn,  function(req, res){
+router.get("/new", middleware.isLoggedIn, middleware.isActive,  function(req, res){
     Lunch.findById(req.params.id, function(err, lunch){
         if(err){
             req.flash("error", err.message);
@@ -32,7 +32,7 @@ router.get("/new", middleware.isLoggedIn,  function(req, res){
 });
 
 // Bookings Create
-router.post("/", middleware.isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, middleware.isActive, function(req, res){
     Lunch.findById(req.params.id, function(err, lunch){
         if(err){
             console.log(err);
