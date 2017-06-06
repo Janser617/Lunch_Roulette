@@ -2,8 +2,17 @@ var express = require("express");
 var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
+const nodemailer = require('nodemailer');
 'use strict';
 
+// create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'lunch.roulette777@gmail.com',
+        pass: 'q8F3hc7FvUAH64ffd8Bj'
+    }
+});
 
 // route route
 router.get("/", function(req, res){
@@ -28,11 +37,19 @@ router.post("/register", function(req, res){
             req.flash("error", err.message);
             return res.render("register");
         }
+        let mailOptions = createMailOptions(req.body.email, verCode, user._id);
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
         passport.authenticate("local")(req, res, function(){
             req.flash("success", "Welcome to Lunch Roulette, " + user.username);
             res.redirect("/lunches");
         });
     });
+    
 });
 
 router.get("/activate/:user_id/:v_id", function(req, res){
@@ -74,5 +91,17 @@ router.get("/logout", function(req, res){
     req.flash("success", "successfully Logged you out.");
     res.redirect("/lunches");
 });
+
+
+function createMailOptions(address, verID, userID) {
+    console.log(address);
+    return {
+        from: '"Lunch Roulette" <lunch.roulette777@gmail.com>', // sender address
+        to: address, // list of receivers
+        subject: 'Hello', // Subject line
+        text: "https://webdevbootcamp-curtis7goodman.c9users.io/activate/" + userID + "/" + verID + " THIS IS YOUR VERURL", // plain text body
+        html: "https://webdevbootcamp-curtis7goodman.c9users.io/activate/" + userID + "/" + verID + " THIS IS YOUR VERURL" // html body
+    };
+}
 
 module.exports = router;
